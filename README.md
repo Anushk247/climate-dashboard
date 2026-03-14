@@ -42,3 +42,55 @@ climate_dashboard/
 │
 └── templates/             # MUST be named exactly 'templates' for Flask
     └── index.html         # Frontend UI and Plotly.js logic
+
+---
+
+💻 Local Setup Instructions (Step-by-Step)
+Follow these steps to run the project on your own computer:
+
+Step 1: Install Python
+Ensure that Python is installed on your computer. You can download it from python.org.
+(Important for Windows users: While installing, check the box that says "Add Python to PATH").
+
+Step 2: Open Terminal
+Open your project folder (climate_dashboard) in VS Code or Terminal.
+
+Step 3: Create a Virtual Environment
+Run this command to create an isolated environment for the project:
+
+Bash
+python -m venv venv
+Step 4: Activate the Virtual Environment
+
+Windows:
+
+Bash
+venv\Scripts\activate
+Mac/Linux:
+
+Bash
+source venv/bin/activate
+Step 5: Install Required Libraries
+Install all the necessary packages using the requirements file:
+
+Bash
+pip install -r requirements.txt
+Step 6: Run the Server
+Start the backend server:
+
+Bash
+python application.py
+Step 7: Open the Dashboard
+Open your web browser and paste this exact link:
+👉 http://127.0.0.1:5000
+
+(Note: Do NOT double-click the index.html file to open it directly. It will cause a CORS error. Always use the local server link).
+
+📖 How to Use the Dashboard
+Ensure you have a .nc (NetCDF) file containing climate data.
+
+Click the "Choose File" button on the dashboard and select your .nc file.
+
+Click "Upload & Analyze".
+
+Scroll down to view the Global Heatmap and Time-Series Plot. Use the interactive Plotly tools on the top right of the graphs to zoom and hover over data points.
