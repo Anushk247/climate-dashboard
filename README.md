@@ -36,7 +36,7 @@ This project provides a **Web-Based Climate Dashboard** that transforms complex 
 ```text
 climate_dashboard/
 │
-├── application.py         # Main Flask backend file (Named application.py for AWS EB)
+├── app.py         # Main Flask backend file (Named application.py for AWS EB)
 ├── requirements.txt       # List of Python dependencies
 ├── README.md              # Project documentation
 │
@@ -51,6 +51,8 @@ Follow these steps to run the project on your own computer:
 Step 1: Install Python
 Ensure that Python is installed on your computer. You can download it from python.org.
 (Important for Windows users: While installing, check the box that says "Add Python to PATH").
+
+Step 2 : Install required python libraries mentioned in the requirement.txt
 
 Step 2: Open Terminal
 Open your project folder (climate_dashboard) in VS Code or Terminal.
