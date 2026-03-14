@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Data Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;}
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .upload-section { margin-bottom: 30px; padding: 20px; border: 2px dashed #ff7f50; border-radius: 8px; text-align: center;}
+        .graphs { display: flex; flex-direction: column; gap: 30px; }
+        .graph-box { width: 100%; height: 500px; }
+        button { background-color: #ff7f50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #e06a3f; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌍 Climate Dashboard</h2>
+    <p>Upload a NetCDF (.nc) file to visualize complex climate data easily.</p>
+
+    <div class="upload-section">
+        <form id="uploadForm">
+            <input type="file" id="fileInput" name="file" accept=".nc" required>
+            <button type="submit">Upload & Analyze</button>
+        </form>
+        <p id="status"></p>
+    </div>
+
+    <div class="graphs">
+        <div>
+            <h3>Global Heatmap</h3>
+            <div id="heatmap" class="graph-box"></div>
+        </div>
+        <div>
+            <h3>Time-Series Trend</h3>
+            <div id="timeseries" class="graph-box"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('fileInput');
+        const statusText = document.getElementById('status');
+        
+        if (fileInput.files.length === 0) return;
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        statusText.innerText = "Processing Data... (This might take a moment)";
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                statusText.innerText = "Error: " + data.error;
+                return;
+            }
+
+            statusText.innerText = "Data loaded successfully!";
+
+            // 1. Draw Time-Series Plotly Graph
+            const trace1 = {
+                x: data.timeseries_dates,
+                y: data.timeseries_values,
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#ff7f50', width: 2}
+            };
+            Plotly.newPlot('timeseries', [trace1], { title: `Average ${data.variable} over time` });
+
+            // 2. Draw Heatmap (Contour Map)
+            const trace2 = {
+                z: data.heatmap_z,
+                x: data.lon,
+                y: data.lat,
+                type: 'contour',
+                colorscale: 'RdBu',
+                reversescale: true
+            };
+            Plotly.newPlot('heatmap', [trace2], { title: `${data.variable} Spatial Distribution` });
+
+        } catch (error) {
+            statusText.innerText = "Failed to upload or process the file.";
+        }
+    });
+</script>
+
+</body>
+</html>
